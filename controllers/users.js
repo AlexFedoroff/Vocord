@@ -122,18 +122,18 @@ const updateAvatar = (req, res, next) => {
 const handleRole = (method, req, res, next) => {
   User.findByIdAndUpdate(
     req.params.userId,
-    { [method]: { roles: req.roleId } },
+    { [method]: { roles: req.body.roleId } },
     { new: true, runValidators: true },
   )
     .orFail(() => {
-      next(new NotFoundError('Пользователь с таким id не найден'));
+      next(new NotFoundError('Запись не найдена'));
     })
     .then((user) => {
       res.status(OK_STATUS).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорректный id пользователя'));
+        next(new BadRequestError('Переданы некорректные данные'));
       } else {
         next(err);
       }
