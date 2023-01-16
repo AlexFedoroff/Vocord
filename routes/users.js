@@ -11,6 +11,6 @@ router.get('/:userId', validateGetUser, getUser);
 router.patch('/me', updateProfileValidate, updateProfile);
 // router.patch('/me/avatar', avatarValidate, updateAvatar);
 router.put('/:userId/roles', addRole);
-router.delete('/:UserId/roles', removeRole);
+router.delete('/:userId/roles/:roleId', removeRole);
 
 module.exports = router;

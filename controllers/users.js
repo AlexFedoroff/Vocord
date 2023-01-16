@@ -120,9 +120,11 @@ const updateAvatar = (req, res, next) => {
 };
 
 const handleRole = (method, req, res, next) => {
+  const roleId = method === '$pull' ? req.params.roleId : req.body.roleId;
+
   User.findByIdAndUpdate(
     req.params.userId,
-    { [method]: { roles: req.body.roleId } },
+    { [method]: { roles: roleId } },
     { new: true, runValidators: true },
   )
     .orFail(() => {
