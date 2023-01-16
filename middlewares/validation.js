@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 
-const urlRegEx = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
+// const urlRegEx = /https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?/;
 
 const loginValidate = celebrate({
   body: Joi.object().keys({
@@ -24,28 +24,9 @@ const updateProfileValidate = celebrate({
   }),
 });
 
-const avatarValidate = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(urlRegEx),
-  }),
-});
-
 const validateGetUser = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().length(24).hex(),
-  }),
-});
-
-const createCardValidate = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(urlRegEx),
-  }),
-});
-
-const cardIdValidate = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
   }),
 });
 
@@ -53,8 +34,5 @@ module.exports = {
   loginValidate,
   registerValidate,
   updateProfileValidate,
-  avatarValidate,
   validateGetUser,
-  createCardValidate,
-  cardIdValidate,
 };
