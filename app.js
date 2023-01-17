@@ -8,7 +8,7 @@ const error = require('./middlewares/error');
 
 const { PORT = 2800 } = process.env;
 const app = express();
-const allowedOrigins = ['http://localhost:2800'];
+const allowedOrigins = ['http://localhost:5173'];
 
 mongoose.set('strictQuery', false);
 

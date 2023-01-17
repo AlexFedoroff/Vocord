@@ -4,6 +4,7 @@ const usersRoutes = require('./users');
 const rolesRoutes = require('./roles');
 const customersRoutes = require('./customers');
 const custGroupsRoutes = require('./customerGroups');
+const notificationsRoutes = require('./notifications');
 
 const { login, createUser } = require('../controllers/users');
 const NotFoundError = require('../utils/not-found-error');
@@ -17,6 +18,7 @@ router.use('/users', usersRoutes);
 router.use('/roles', rolesRoutes);
 router.use('/customers', customersRoutes);
 router.use('/customergroups', custGroupsRoutes);
+router.use('/notifications', notificationsRoutes);
 
 router.use('*', (_, __, next) => { next(new NotFoundError('404 - Страница не найдена')); });
 
