@@ -1,18 +1,16 @@
 const mongoose = require('mongoose');
 
-const roleSchema = new mongoose.Schema({
+const customerGroupSchema = new mongoose.Schema({
   title: {
     type: String,
     minlength: 1,
     maxlength: 64,
-    required: true,
-    unique: [true, 'Такая роль уже существует'],
+    unique: true,
   },
   description: {
     type: String,
     minlength: 1,
     maxlength: 255,
-    required: true,
   },
   created_at: {
     type: Date,
@@ -20,4 +18,4 @@ const roleSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('role', roleSchema);
+module.exports = mongoose.model('customerGroup', customerGroupSchema);

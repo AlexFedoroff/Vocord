@@ -1,6 +1,6 @@
 const Role = require('../models/role');
 const BadRequestError = require('../utils/bad-request-error');
-// const ConflictError = require('../utils/conflict-error');
+const ConflictError = require('../utils/conflict-error');
 const NotFoundError = require('../utils/not-found-error');
 
 const {
@@ -21,15 +21,34 @@ const createRole = (req, res, next) => {
     .then((role) => res.status(OK_STATUS).send({ role }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные при создании карточки'));
+        next(new BadRequestError('Переданы некорректные данные при создании роли'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Такая роль уже существует'));
       } else {
         next(err);
       }
     });
 };
 
-const getRole = (roleId, res, next) => {
-  Role.findById(roleId)
+const getRole = (req, res, next) => {
+  Role.findById(req.params.roleId)
+    .then((role) => {
+      if (!role) {
+        throw new NotFoundError('Роль с таким id не найдена');
+      }
+      return res.status(OK_STATUS).send({ role });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Некорректный id роли'));
+      } else {
+        next(err);
+      }
+    });
+};
+
+const deleteRole = (req, res, next) => {
+  Role.findByIdAndDelete(req.params.roleId)
     .then((role) => {
       if (!role) {
         throw new NotFoundError('Роль с таким id не найдена');
@@ -47,7 +66,11 @@ const getRole = (roleId, res, next) => {
 
 const updateRole = (req, res, next) => {
   const { title, description } = req.body;
-  Role.findByIdAndUpdate(req.role._id, { title, description }, { new: true, runValidators: true })
+  Role.findByIdAndUpdate(
+    req.body.id,
+    { title, description },
+    { new: true, runValidators: true },
+  )
     .then((role) => {
       if (!role) {
         throw new NotFoundError('Роль с указанным id не найдена');
@@ -55,8 +78,10 @@ const updateRole = (req, res, next) => {
       res.status(OK_STATUS).send(role);
     })
     .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные роли'));
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при создании роли'));
+      } else if (err.code === 11000) {
+        next(new ConflictError('Такая роль уже существует'));
       } else {
         next(err);
       }
@@ -68,4 +93,5 @@ module.exports = {
   createRole,
   getRole,
   updateRole,
+  deleteRole,
 };

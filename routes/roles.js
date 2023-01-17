@@ -1,14 +1,18 @@
 const router = require('express').Router();
 const {
-  getRoles, createRole, updateRole,
+  getRoles,
+  getRole,
+  createRole,
+  updateRole,
+  deleteRole,
 } = require('../controllers/roles');
 
 // const { createRoleValidate, roleIdValidate } = require('../middlewares/validation');
 
 router.get('/', getRoles);
+router.get('/:roleId', getRole);
 router.post('/', createRole);
-// router.delete('/:cardId', cardIdValidate, deleteCard);
+router.delete('/:roleId', deleteRole);
 router.patch('/', updateRole);
-// router.delete('/:cardId/likes', cardIdValidate, dislikeCard);
 
 module.exports = router;
