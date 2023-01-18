@@ -66,7 +66,7 @@ const updateNotification = (req, res, next) => {
     title,
     message,
     author,
-    customer
+    customer,
   }, { new: true, runValidators: true })
     .then((notification) => {
       if (!notification) {

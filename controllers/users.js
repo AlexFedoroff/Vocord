@@ -46,7 +46,7 @@ const login = (req, res, next) => {
       token: jwt.sign(
         { _id: user._id },
         SECRET_KEY,
-        { expiresIn: '7d' },
+        { expiresIn: '1d' },
       ),
     }))
     .catch((err) => next(new UnauthorizedError(err.message)));
