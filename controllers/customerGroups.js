@@ -49,15 +49,15 @@ const getCustomerGroup = (roleId, res, next) => {
 
 const updateCustomerGroup = (req, res, next) => {
   const { title, description } = req.body;
-  CustomerGroup.findByIdAndUpdate(req.role._id, {
+  CustomerGroup.findByIdAndUpdate(req.body.id, {
     title,
     description,
   }, { new: true, runValidators: true })
-    .then((role) => {
-      if (!role) {
+    .then((group) => {
+      if (!group) {
         throw new NotFoundError('Группа с указанным id не найдена');
       }
-      res.status(OK_STATUS).send(role);
+      res.status(OK_STATUS).send(group);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {

@@ -88,10 +88,42 @@ const updateRole = (req, res, next) => {
     });
 };
 
+const handlePermission = (method, req, res, next) => {
+  const permissionId = method === '$pull' ? req.params.permissionId : req.body.permissionId;
+  Role.findByIdAndUpdate(
+    req.params.roleId,
+    { [method]: { permissions: permissionId } },
+    { new: true, runValidators: true },
+  )
+    .orFail(() => {
+      next(new NotFoundError('Запись не найдена'));
+    })
+    .then((group) => {
+      res.status(OK_STATUS).send(group);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
+};
+
+const addPermission = (req, res, next) => {
+  handlePermission('$addToSet', req, res, next);
+};
+
+const removePermission = (req, res, next) => {
+  handlePermission('$pull', req, res, next);
+};
+
 module.exports = {
   getRoles,
   createRole,
   getRole,
   updateRole,
   deleteRole,
+  addPermission,
+  removePermission,
 };

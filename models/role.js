@@ -14,6 +14,11 @@ const roleSchema = new mongoose.Schema({
     maxlength: 255,
     required: true,
   },
+  permissions: [{
+    type: mongoose.Schema.Types.ObjectId,
+    default: [],
+    ref: 'permission',
+  }],
   created_at: {
     type: Date,
     default: Date.now,
