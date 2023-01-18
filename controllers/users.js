@@ -58,13 +58,13 @@ const getUserById = (userId, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь с таким id не найден');
       }
-      return res.status(OK_STATUS).send({
-        _id: user.id,
-        name: user.name,
-        about: user.about,
-        avatar: user.avatar,
-        email: user.email,
-      });
+      return res.status(OK_STATUS).send(user.toObject({
+        transform: (_, resp) => {
+          // eslint-disable-next-line no-param-reassign
+          delete resp.password;
+          return resp;
+        },
+      }));
     })
     .catch((err) => {
       if (err.name === 'CastError') {

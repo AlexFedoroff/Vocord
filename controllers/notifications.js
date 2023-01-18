@@ -14,13 +14,17 @@ const getNotifications = (_, res, next) => {
 
 const createNotification = (req, res, next) => {
   const {
+    title,
     message,
     author,
+    customer,
     customerGroups,
   } = req.body;
   Notification.create({
+    title,
     message,
     author,
+    customer,
     customerGroups,
     runValidators: true,
   })
@@ -53,12 +57,16 @@ const getNotification = (req, res, next) => {
 
 const updateNotification = (req, res, next) => {
   const {
+    title,
     message,
     author,
+    customer,
   } = req.body;
   Notification.findByIdAndUpdate(req.body.id, {
+    title,
     message,
     author,
+    customer
   }, { new: true, runValidators: true })
     .then((notification) => {
       if (!notification) {

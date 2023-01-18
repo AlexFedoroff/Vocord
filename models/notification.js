@@ -1,6 +1,12 @@
+// const { string } = require('joi');
 const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    minlength: 1,
+    maxlength: 128,
+  },
   message: {
     type: String,
     minlength: 1,
@@ -21,11 +27,13 @@ const notificationSchema = new mongoose.Schema({
     default: [],
     ref: 'customerGroup',
   }],
-  deliveryStatuses: [{
+  customer: {
     type: mongoose.Schema.Types.ObjectId,
-    default: [],
-    ref: 'customer',
-  }],
+  },
+  deliveryStatus: {
+    type: String,
+    default: 'project',
+  },
 });
 
 module.exports = mongoose.model('notification', notificationSchema);
