@@ -25,7 +25,7 @@ app.use(errors());
 app.use(error);
 
 mongoose
-  .connect('mongodb://localhost:27017/vocord', {
+  .connect('mongodb://127.0.0.1:27017/vocord', {
     useUnifiedTopology: true, useNewUrlParser: true, autoIndex: true,
   });
 

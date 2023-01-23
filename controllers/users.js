@@ -24,7 +24,7 @@ const createUser = (req, res, next) => {
       password: hash,
     }))
     .then((user) => res.status(OK_STATUS).send({
-      id: user.id,
+      userId: user.id,
       login: user.login,
       email: user.email,
       created_at: user.created_at,
@@ -103,24 +103,6 @@ const updateProfile = (req, res, next) => {
     });
 };
 
-const updateAvatar = (req, res, next) => {
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError('Пользователь с указанным id не найден');
-      }
-      res.status(OK_STATUS).send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректный запрос'));
-      } else {
-        next(err);
-      }
-    });
-};
-
 const handleRole = (method, req, res, next) => {
   const roleId = method === '$pull' ? req.params.roleId : req.body.roleId;
 
@@ -152,14 +134,16 @@ const removeRole = (req, res, next) => {
   handleRole('$pull', req, res, next);
 };
 
+const signout = (_, res) => res.status(OK_STATUS).send({ message: 'Успешный выход из системы' });
+
 module.exports = {
   getUsers,
   createUser,
   login,
+  signout,
   getUser,
   getCurrentUser,
   updateProfile,
-  updateAvatar,
   addRole,
   removeRole,
 };
