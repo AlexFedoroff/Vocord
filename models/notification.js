@@ -27,9 +27,11 @@ const notificationSchema = new mongoose.Schema({
     default: [],
     ref: 'customerGroup',
   }],
-  customer: {
+  customers: [{
     type: mongoose.Schema.Types.ObjectId,
-  },
+    default: [],
+    ref: 'customer',
+  }],
   deliveryStatus: {
     type: String,
     default: 'project',

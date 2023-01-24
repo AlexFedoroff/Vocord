@@ -39,7 +39,8 @@ const createNotification = (req, res, next) => {
 };
 
 const getNotification = (req, res, next) => {
-  Notification.findById(req.params.customerId)
+  Notification.findById(req.params.notificationId)
+    // .populate('customerGroups')
     .then((notification) => {
       if (!notification) {
         throw new NotFoundError('Сообщение с таким id не найдено');
@@ -86,7 +87,7 @@ const updateNotification = (req, res, next) => {
 const handleGroup = (method, req, res, next) => {
   const groupId = method === '$pull' ? req.params.groupId : req.body.groupId;
   Notification.findByIdAndUpdate(
-    req.params.customerId,
+    req.params.notificationId,
     { [method]: { customerGroups: groupId } },
     { new: true, runValidators: true },
   )
@@ -113,6 +114,36 @@ const removeGroup = (req, res, next) => {
   handleGroup('$pull', req, res, next);
 };
 
+const handleCustomer = (method, req, res, next) => {
+  const customerId = method === '$pull' ? req.params.customerId : req.body.customerId;
+  Notification.findByIdAndUpdate(
+    req.params.notificationId,
+    { [method]: { customers: customerId } },
+    { new: true, runValidators: true },
+  )
+    .orFail(() => {
+      next(new NotFoundError('Запись не найдена'));
+    })
+    .then((group) => {
+      res.status(OK_STATUS).send(group);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else {
+        next(err);
+      }
+    });
+};
+
+const addCustomer = (req, res, next) => {
+  handleCustomer('$addToSet', req, res, next);
+};
+
+const removeCustomer = (req, res, next) => {
+  handleCustomer('$pull', req, res, next);
+};
+
 const deleteNotification = (req, res, next) => {
   Notification.findByIdAndDelete(req.params.notificationId)
     .then((notification) => {
@@ -137,5 +168,7 @@ module.exports = {
   updateNotification,
   addGroup,
   removeGroup,
+  addCustomer,
+  removeCustomer,
   deleteNotification,
 };
