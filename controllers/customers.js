@@ -9,7 +9,7 @@ const {
 
 const getCustomers = (_, res, next) => {
   Customer.find({})
-    .then((roles) => res.status(OK_STATUS).send({ roles }))
+    .then((customers) => res.status(OK_STATUS).send({ customers }))
     .catch((err) => next(err));
 };
 

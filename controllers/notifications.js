@@ -8,6 +8,7 @@ const {
 
 const getNotifications = (_, res, next) => {
   Notification.find({})
+    .populate('author')
     .then((notifications) => res.status(OK_STATUS).send({ notifications }))
     .catch((err) => next(err));
 };
